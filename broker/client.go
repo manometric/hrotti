@@ -95,7 +95,7 @@ func (c *Client) Stop(sendWill bool, hrotti *Hrotti) {
 	//Its possible that error conditions with the network connection might cause both Send and Receive to
 	//try and call Stop(), but we only want it to be called once, so using the sync.Once in the client we
 	//run the embedded function, later calls with the same sync.Once will simply return.
-	INFO.Println("Stopping client", c.clientID, c.conn.RemoteAddr())
+	INFO.Println("Stopping client", c.clientID)
 	if !c.takeOver {
 		c.stopOnce.Do(func() {
 			//close the stop channel, close the network connection, wait for all the goroutines in the waitgroup

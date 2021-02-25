@@ -84,7 +84,8 @@ func (h *Hrotti) AddListener(name string, config *ListenerConfig) error {
 		//set up the ws connection handler, ie what we do when we get a new websocket connection
 		server.Handler = func(ws *websocket.Conn) {
 			ws.PayloadType = websocket.BinaryFrame
-			INFO.Println("New incoming websocket connection", ws.RemoteAddr())
+
+			INFO.Printf("New incoming websocket connection (%s)\n", ws.Config().Location)
 			listener.connections = append(listener.connections, ws)
 			h.InitClient(ws)
 		}
@@ -182,12 +183,12 @@ func (h *Hrotti) InitClient(conn net.Conn) {
 			ca.Write(conn)
 		}
 		//Put up a local message indicating an errored connection attempt and close the connection
-		ERROR.Println(ConnackReturnCodes[rc], conn.RemoteAddr())
+		ERROR.Println(ConnackReturnCodes[rc], "todo")
 		conn.Close()
 		return
 	} else {
 		//Put up an INFO message with the client id and the address they're connecting from.
-		INFO.Println(ConnackReturnCodes[rc], cp.ClientIdentifier, conn.RemoteAddr())
+		INFO.Printf("%s (client id: '%s')\n", ConnackReturnCodes[rc], cp.ClientIdentifier)
 	}
 
 	//check for a zero length client id and if it exists create one from the UUID library and return
